@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "id": "tactical",
+  "version": "1.0.0",
+  "name": "Tactical Armor",
+  "description": "Adds S70 Helmet and Titan Chestplate (disables legs & feet)",
+  "authors": ["You"],
+  "license": "MIT",
+  "environment": "*",
+  "entrypoints": {
+    "main": ["com.example.tactical.TacticalMod"]
+  },
+  "depends": {
+    "fabricloader": ">=0.15.0",
+    "minecraft": "1.21.4",
+    "java": ">=21",
+    "fabric-api": "*"
+  }
+}
