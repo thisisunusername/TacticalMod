@@ -1,10 +1,11 @@
-## License
-
-This template is available under the CC0 license. Feel free to learn from it and incorporate it in your own projects.
+## 致谢 / 来源
+- 模板：[Fabric Example Mod](https://github.com/FabricMC/fabric-example-mod)（[CC0-1.0](https://github.com/FabricMC/fabric-example-mod) 协议）
+- 原文地址：https://github.com/FabricMC/fabric-example-mod
+- 开发框架：[Fabric](https://fabricmc.net/)
 # TacticalMod
 
 一款 **Minecraft 1.21.4 (Fabric)** 的战术护甲拓展模组，添加经典战术装备。
-
+ 
 ## 新增装备
 
 | 装备 | 描述 |
