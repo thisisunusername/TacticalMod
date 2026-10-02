@@ -81,9 +81,14 @@ jobs:
         run: |
           echo "---- build/libs ----"
           ls -la build/libs/ || true
-          echo "---- deep find ----"
-          find build -name '*.jar' -not -path '*/tmp/*' 2>/dev/null || true
-          echo "::notice::LIBS=$(ls build/libs/ 2>/dev/null | tr '\n' ',')"
+          echo "---- all jars under build ----"
+          find build -name '*.jar' -not -path '*/tmp/*' 2>/dev/null | head -30 || true
+          echo "---- build dir top level ----"
+          ls -la build/ || true
+          JARS=$(find build -name '*.jar' -not -path '*/tmp/*' 2>/dev/null | tr '\n' ' ')
+          echo "::notice::JARS=[$JARS]"
+          LIBS=$(ls build/libs/ 2>/dev/null | tr '\n' ',')
+          echo "::notice::LIBS=[$LIBS]"
 
       - name: Upload artifact (jar)
         if: steps.build.outcome == 'success'
