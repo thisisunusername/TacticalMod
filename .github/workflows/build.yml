@@ -81,6 +81,9 @@ jobs:
         run: |
           echo "---- build/libs ----"
           ls -la build/libs/ || true
+          echo "---- deep find ----"
+          find build -name '*.jar' -not -path '*/tmp/*' 2>/dev/null || true
+          echo "::notice::LIBS=$(ls build/libs/ 2>/dev/null | tr '\n' ',')"
 
       - name: Upload artifact (jar)
         if: steps.build.outcome == 'success'
@@ -120,5 +123,6 @@ jobs:
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
-          files: dist/*.jar
+          files: dist/**/*.jar
           generate_release_notes: true
+          fail_on_unmatched_files: false
