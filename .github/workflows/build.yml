@@ -1,0 +1,82 @@
+name: Build
+
+on:
+  push:
+    branches: [ main, master ]
+    tags: [ 'v*' ]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build Fabric Mod
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Show environment
+        run: |
+          java -version
+          echo "---- gradle.properties ----"
+          cat gradle.properties
+          echo "---- java files ----"
+          find src -name '*.java' | sort
+
+      - name: Build
+        run: ./gradlew build --stacktrace --no-daemon
+
+      - name: Upload artifact (jar)
+        uses: actions/upload-artifact@v4
+        with:
+          name: tacticalmod-jar
+          path: |
+            build/libs/*.jar
+            !build/libs/*-sources.jar
+          if-no-files-found: error
+
+      - name: Upload reports on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-reports
+          path: |
+            build/reports/
+            build/tmp/compileJava/
+            build/tmp/compileClientJava/
+          if-no-files-found: ignore
+
+  release:
+    name: Publish Release
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: tacticalmod-jar
+          path: dist
+
+      - name: List files
+        run: ls -la dist/
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*.jar
+          generate_release_notes: true
