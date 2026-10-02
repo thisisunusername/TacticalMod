@@ -77,18 +77,21 @@ jobs:
 
       - name: List built jars
         if: steps.build.outcome == 'success'
+        continue-on-error: true
         shell: bash
         run: |
+          set +e
           echo "---- build/libs ----"
-          ls -la build/libs/ || true
+          ls -la build/libs/ 2>&1
           echo "---- all jars under build ----"
-          find build -name '*.jar' -not -path '*/tmp/*' 2>/dev/null | head -30 || true
+          find build -name '*.jar' -not -path '*/tmp/*' 2>/dev/null | head -30
           echo "---- build dir top level ----"
-          ls -la build/ || true
+          ls -la build/ 2>&1
           JARS=$(find build -name '*.jar' -not -path '*/tmp/*' 2>/dev/null | tr '\n' ' ')
-          echo "::notice::JARS=[$JARS]"
+          echo "::notice::JARS=[${JARS}]"
           LIBS=$(ls build/libs/ 2>/dev/null | tr '\n' ',')
-          echo "::notice::LIBS=[$LIBS]"
+          echo "::notice::LIBS=[${LIBS}]"
+          exit 0
 
       - name: Upload artifact (jar)
         if: steps.build.outcome == 'success'
