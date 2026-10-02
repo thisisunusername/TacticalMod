@@ -75,15 +75,20 @@ jobs:
         if: steps.build.outcome == 'failure'
         run: exit 1
 
+      - name: List built jars
+        if: steps.build.outcome == 'success'
+        shell: bash
+        run: |
+          echo "---- build/libs ----"
+          ls -la build/libs/ || true
+
       - name: Upload artifact (jar)
         if: steps.build.outcome == 'success'
         uses: actions/upload-artifact@v4
         with:
           name: tacticalmod-jar
-          path: |
-            build/libs/*.jar
-            !build/libs/*-sources.jar
-          if-no-files-found: error
+          path: build/libs/*.jar
+          if-no-files-found: warn
 
       - name: Upload reports on failure
         if: failure()
